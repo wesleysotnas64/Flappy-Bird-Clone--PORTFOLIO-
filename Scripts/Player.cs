@@ -4,35 +4,29 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    CharacterController controller;
-    public Sprite sprite;
+    public bool Live { get; set; }
 
     public Vector2 yVelocity;
     public float maxHeight;
     public float jumpSpeed;
     public float timeToPeak;
-
     public float gravity;
+
+    private Sprite sprite;
 
     void Awake()
     {
-        controller = GetComponent<CharacterController>();
+        sprite = GameObject.Find("Sprite").GetComponent<Sprite>();
         GravityCalc();
+        Live = false;
     }
 
     void Update()
     {
-        if(sprite.live)
+        if(Live)
         {
-
             yVelocity += gravity * Time.deltaTime * Vector2.down;
-
-            if (Input.GetKeyDown("space"))
-            {
-                yVelocity = jumpSpeed * Vector2.up;
-            } 
-
-            controller.Move(yVelocity);
+            transform.Translate(yVelocity);
         }
     }
 
@@ -40,5 +34,17 @@ public class Player : MonoBehaviour
     {
         gravity = (2 * maxHeight) / (Mathf.Pow(timeToPeak, 2));
         jumpSpeed = gravity * timeToPeak;
+    }
+
+    public void Jump()
+    {
+        Live = true;
+        yVelocity = jumpSpeed * Vector2.up;
+        sprite.timeLerp = 0;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        Live = false;
     }
 }

@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class Sprite : MonoBehaviour
 {
+    private Player player;
 
-    public bool live;
     public Vector2 lookAt;
     public Vector2 lookUp;
     public Vector2 lookDown;
@@ -15,22 +15,23 @@ public class Sprite : MonoBehaviour
 
     void Awake()
     {
-        live = false;
+        player = GameObject.Find("Player").GetComponent<Player>();
+
         lookUp   = new Vector2(1,  1).normalized;
         lookDown = new Vector2(1, -1).normalized;
     }
 
     void Update()
     {
-        timeLerp += Time.deltaTime;
-        if (Input.GetKeyDown("space"))
-        {
-            live = true;
-            timeLerp = 0;
-        }
+        LookToDirection();
+    }
 
-        if (live)
-        { 
+    private void LookToDirection()
+    {
+        timeLerp += Time.deltaTime;
+
+        if (player.Live)
+        {
             float t = Mathf.Min(timeLerp * velocityLerp, 1);
             lookAt = Vector2.Lerp(lookUp, lookDown, t);
 
