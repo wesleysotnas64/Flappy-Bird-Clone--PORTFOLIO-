@@ -6,12 +6,15 @@ public class Obstacle : MonoBehaviour
 {
 
     private float velocity;
+    private float yOffset;
 
     private Player player;
 
     void Awake()
     {
         velocity = 1;
+        yOffset = Random.Range(-1.25f, 1.75f);
+        transform.position = new Vector3(transform.position.x, yOffset, 0);
         player = GameObject.Find("Player").GetComponent<Player>();
     }
 
@@ -20,6 +23,10 @@ public class Obstacle : MonoBehaviour
         if(player.Live)
             transform.Translate(-(Time.deltaTime * velocity), 0, 0);
 
-        if (transform.position.x < -3) Destroy(this.gameObject);
+        if (transform.position.x <= -5)
+        {
+            yOffset = Random.Range(-1.25f, 1.75f);
+            transform.position = new Vector3(2, yOffset, 0);
+        }
     }
 }
