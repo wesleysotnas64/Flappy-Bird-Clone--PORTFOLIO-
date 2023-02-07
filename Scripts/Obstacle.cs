@@ -10,12 +10,15 @@ public class Obstacle : MonoBehaviour
 
     private Player player;
 
+    private bool behindThePlayer;
+
     void Awake()
     {
         velocity = 1;
         yOffset = Random.Range(-1.25f, 1.75f);
         transform.position = new Vector3(transform.position.x, yOffset, 0);
         player = GameObject.Find("Player").GetComponent<Player>();
+        behindThePlayer = false;
     }
 
     void Update()
@@ -27,6 +30,21 @@ public class Obstacle : MonoBehaviour
         {
             yOffset = Random.Range(-1.25f, 1.75f);
             transform.position = new Vector3(2, yOffset, 0);
+            behindThePlayer = false;
+        }
+
+        SetPoint();
+    }
+
+    private void SetPoint()
+    {
+        if(transform.position.x < GameObject.Find("Player").transform.position.x)
+        {
+            if(!behindThePlayer)
+            {
+                behindThePlayer = true;
+                GameObject.Find("Canvas").GetComponent<GUIController>().Point();
+            }
         }
     }
 }
